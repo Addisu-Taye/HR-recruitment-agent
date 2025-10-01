@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: hr-recruitment-agent
+    env: python
+    region: frankfurt # or your region
+    buildCommand: "pip install -r requirements.txt && npm install && npm run build"
+    startCommand: "python backend/manage.py collectstatic --noinput && python backend/manage.py migrate && gunicorn hr_core.wsgi"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+    disk:
+      name: hr_data
+      mountPath: /app/backend/media
